@@ -83,14 +83,18 @@ connection.connect(function(err) {
                   connection.end()
                 } else {
                   query = connection.query(
-                    "SELECT stock_quantity FROM products WHERE ?",
+                    "SELECT stock_quantity, product_name, price FROM products WHERE ?",
                     [
                     {
                       item_id: input.productID
                     }
                     ],
                     function(err, roc) {
+                      if (err) throw err;
                       console.log("Sale complete!");
+                      console.log(roc[0]);
+                      var total = (roc[0].price * input.quantity);
+                      console.log("Total cost of " + input.quantity + " " + roc[0].product_name + " is: $" + total.toFixed(2));
                       connection.end();
                     });
                 }
@@ -110,11 +114,8 @@ connection.connect(function(err) {
 // https://stackoverflow.com/questions/23266854/node-mysql-multiple-statement-in-one-query
 // ---------------------------------------------------------------------------------------------------
                   // query = connection.query(    
-                  // "SELECT price FROM products WHERE ?; SELECT product_name FROM products WHERE ?",
+                  // "SELECT  FROM products WHERE ?,"
                   // [
-                  // {
-                  //   item_id: input.productID
-                  // },
                   // {
                   //   item_id: input.productID
                   // }
@@ -122,7 +123,6 @@ connection.connect(function(err) {
                   //   function(err, roc) {
                   //     if (err) throw err;
                   //     console.log(roc);
-                  //     var total = (roc[0] * input.quantity);
-                  //     console.log("Total cost of " + input.quantity + " " + roc[1] + " is: $" + total.toFixed(2));
+                      
                   //   },
                   // );
